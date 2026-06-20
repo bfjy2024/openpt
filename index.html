@@ -1,1 +1,431 @@
-
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PT站点开注信息</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #f6f9fc;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      padding: 2rem 1.5rem;
+      color: #0b1a2f;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+      gap: 1rem;
+    }
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .header-left h1 {
+      font-weight: 700;
+      font-size: 1.9rem;
+      letter-spacing: -0.02em;
+      background: linear-gradient(145deg, #0b2b4a, #1a4b6d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .badge-count {
+      background: #d3e5f7;
+      color: #1a4b6d;
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 0.25rem 1rem;
+      border-radius: 40px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.03);
+      white-space: nowrap;
+    }
+    .update-time {
+      color: #3b5f7a;
+      background: #e9f0f7;
+      padding: 0.3rem 1.2rem;
+      border-radius: 40px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .update-time::before { content: "⏱️"; font-size: 0.9rem; }
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.8rem;
+    }
+    .card {
+      background: #ffffff;
+      border-radius: 28px;
+      padding: 1.6rem 1.4rem 1.4rem;
+      box-shadow: 0 12px 28px -8px rgba(0, 20, 40, 0.08), 0 2px 6px rgba(0,0,0,0.02);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s;
+      border: 1px solid rgba(220, 235, 250, 0.5);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 24px 40px -16px rgba(18, 52, 86, 0.15);
+      border-color: #b6d4e8;
+    }
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 0.9rem;
+    }
+    .logo-wrapper {
+      flex-shrink: 0;
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: #f0f5fa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      border: 1px solid rgba(200, 215, 230, 0.3);
+    }
+    .logo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding: 4px;
+      background: #fff;
+    }
+    .site-title {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+    .site-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #0b2b4a;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+    }
+    .site-domain {
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #4f7390;
+      letter-spacing: 0.02em;
+      opacity: 0.8;
+      word-break: break-all;
+    }
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 0.6rem 0 1rem;
+    }
+    .tag {
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.2rem 0.9rem;
+      border-radius: 40px;
+      letter-spacing: 0.02em;
+      background: #eef3f8;
+      color: #1c4b6a;
+      border: 1px solid rgba(160, 190, 215, 0.2);
+      text-transform: uppercase;
+    }
+    .tag-engine { background: #e3eaf2; color: #1a4058; }
+    .tag-register { background: #d9f0e1; color: #0d5430; border-color: #b0d9c4; }
+    .tag-invite-open { background: #d1ecf9; color: #06527a; border-color: #9fcde6; }
+    .tag-invite-closed { background: #f3e1e1; color: #8f3a3a; border-color: #e7c4c4; }
+    .tag-invite-unknown { background: #f5efd8; color: #7d6734; border-color: #e3d6b0; }
+    .register-link {
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid #e5edf5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .register-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #1b5c8c;
+      color: white;
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 0.45rem 1.2rem;
+      border-radius: 60px;
+      text-decoration: none;
+      transition: background 0.15s, transform 0.1s;
+      border: 1px solid rgba(255,255,255,0.1);
+      letter-spacing: 0.01em;
+    }
+    .register-btn:hover {
+      background: #0f4a73;
+      transform: scale(0.97);
+      text-decoration: none;
+      color: white;
+    }
+    .register-btn:active { background: #0a3d60; }
+    .invite-badge {
+      font-size: 0.7rem;
+      background: #e4ecf5;
+      padding: 0.25rem 0.9rem;
+      border-radius: 50px;
+      color: #1a405a;
+      font-weight: 500;
+      white-space: nowrap;
+    }
+    .footer {
+      margin-top: 3rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #3b5f7a;
+      border-top: 1px solid #dae6f0;
+      padding-top: 1.8rem;
+      letter-spacing: 0.3px;
+    }
+    .footer a {
+      color: #1a5a7a;
+      text-decoration: none;
+      font-weight: 600;
+      border-bottom: 1px dotted rgba(26, 90, 122, 0.3);
+      transition: border-color 0.2s;
+    }
+    .footer a:hover { border-bottom-color: #1a5a7a; }
+    .logo-placeholder {
+      background: #e3ecf5;
+      color: #1c4a6b;
+      font-weight: 600;
+      font-size: 0.8rem;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    @media (max-width: 640px) {
+      body { padding: 1.2rem 0.8rem; }
+      .header { flex-direction: column; align-items: flex-start; gap: 0.6rem; }
+      .header-left h1 { font-size: 1.6rem; }
+      .card-grid { grid-template-columns: 1fr; gap: 1.2rem; }
+      .card { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <div class="header-left">
+      <h1>PT站点开注信息</h1>
+      <span class="badge-count">16 个站点</span>
+    </div>
+    <div class="update-time">2026-6</div>
+  </div>
+  <div class="card-grid" id="siteGrid"></div>
+  <div class="footer">
+    powered by <a href="https://bfjy2024.github.io/bfjy" target="_blank" rel="noopener">bfjy2024</a>
+  </div>
+</div>
+<script>
+  (function() {
+    const sites = [
+  {
+    "name": "DStudio",
+    "domain": "dstudio.me",
+    "logo": "https://dstudio.me/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://dstudio.me/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "音乐乌托邦",
+    "domain": "musopia.vip",
+    "logo": "https://musopia.vip/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://www.musopia.vip/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "itz",
+    "domain": "pt.itzmx.com",
+    "logo": "https://pt.itzmx.com/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://pt.itzmx.com/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "星湾",
+    "domain": "xingwan.cc",
+    "logo": "https://xingwan.cc/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://xingwan.cc/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "HDClone",
+    "domain": "pt.hdclone.top",
+    "logo": "https://pt.hdclone.top/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://pt.hdclone.top/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "凤凰PT",
+    "domain": "pt.521.best",
+    "logo": "https://pt.521.best/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://pt.521.best/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "LP-Bits.com 2.0",
+    "domain": "lp-bits.com",
+    "logo": "https://lp-bits.com/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://lp-bits.com/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "柠檬不甜",
+    "domain": "lemonhd.net",
+    "logo": "https://lemonhd.net/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://lemonhd.net/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "红豆包",
+    "domain": "hdbao.cc",
+    "logo": "https://hdbao.cc/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://hdbao.cc/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "aling",
+    "domain": "pt.aling.de",
+    "logo": "https://pt.aling.de/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://pt.aling.de/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "躺平",
+    "domain": "tangpt.top",
+    "logo": "https://tangpt.top/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://www.tangpt.top/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "CARPT",
+    "domain": "carpt.net",
+    "logo": "https://carpt.net/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://carpt.net/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "LongPT",
+    "domain": "longpt.org",
+    "logo": "https://longpt.org/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://longpt.org/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "RailgunPT",
+    "domain": "bilibili.download",
+    "logo": "https://bilibili.download/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://bilibili.download/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "NovaHD",
+    "domain": "pt.novahd.top",
+    "logo": "https://pt.novahd.top/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://pt.novahd.top/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  },
+  {
+    "name": "暮雪阁",
+    "domain": "pt.muxuege.org",
+    "logo": "https://pt.muxuege.org/favicon.ico",
+    "engine": "nexusphp",
+    "registerUrl": "https://pt.muxuege.org/signup.php",
+    "invite": "开放邀请",
+    "inviteType": "open"
+  }
+];
+    const inviteClassMap = {
+      "开放邀请": "tag-invite-open",
+      "关闭邀请": "tag-invite-closed",
+      "邀请未知": "tag-invite-unknown"
+    };
+    const grid = document.getElementById('siteGrid');
+    if (!grid) return;
+    let html = '';
+    sites.forEach((site) => {
+      const logoHtml = `<img src="${site.logo}" alt="${site.name} logo" loading="lazy" onerror="this.style.display='none'; this.parentNode.innerHTML='<span class=\'logo-placeholder\'>${site.name.charAt(0)}</span>'">`;
+      const inviteClass = inviteClassMap[site.invite] || 'tag-invite-unknown';
+      html += `
+        <div class="card">
+          <div class="card-header">
+            <div class="logo-wrapper">${logoHtml}</div>
+            <div class="site-title">
+              <span class="site-name">${site.name}</span>
+              <span class="site-domain">${site.domain}</span>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag tag-engine">${site.engine}</span>
+            <span class="tag tag-register">✅ 开放注册</span>
+            <span class="tag ${inviteClass}">${site.invite}</span>
+          </div>
+          <div class="register-link">
+            <a href="${site.registerUrl}" target="_blank" rel="noopener noreferrer" class="register-btn">
+              <span>📋 注册页</span>
+              <span style="font-size:1.1rem;">→</span>
+            </a>
+            <span class="invite-badge">${site.invite}</span>
+          </div>
+        </div>
+      `;
+    });
+    grid.innerHTML = html;
+  })();
+</script>
+</body>
+</html>
